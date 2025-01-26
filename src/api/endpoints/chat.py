@@ -12,18 +12,12 @@ from src.db.base import get_db
 
 chat_router = APIRouter()
 
-@chat_router.get("/conversations", tags=["chat"])
-async def get_chat_conversations():
-    return {"message": "Hey, It is me Goku"}
-
-
 @chat_router.post("/conversations/danny/completions", tags=["chat"])
 async def get_personal_completions(message: Message, db: Annotated[Database, Depends(get_db)]):
     try:
         message.id = str(uuid.uuid4())
         await insert_personal_message(message, db)
         messages = reconstruct_conversation(message, db)
-        print(messages)
         stream = generate_completion(messages)
         assistant_message_id = str(uuid.uuid4())
         async def response_generator():
@@ -37,7 +31,6 @@ async def get_personal_completions(message: Message, db: Annotated[Database, Dep
                     yield f"event: message\ndata: {json.dumps({'content': content})}\n\n"
 
             yield "event: [DONE]\n\n"
-            # After collecting full response, store it in DB
             
             assistant_message = Message(
                 id=assistant_message_id,
@@ -58,22 +51,6 @@ async def get_personal_completions(message: Message, db: Annotated[Database, Dep
             },
             media_type="text/event-stream"
         )
-    except Exception as e:
-        print(e)
-        raise HTTPException(
-            status_code=500,
-            detail="Internal Server Error"
-        )
-
-@chat_router.post("/conversations/{id}/completions", tags=["chat"])
-async def get_completions(id: str, message: Message):
-    try:
-        # get the conversation from the database
-        # add the message to the conversation
-        # get the completions from the ai service
-        # add the completions to the conversation
-        # return the conversation
-        pass
     except Exception as e:
         print(e)
         raise HTTPException(
@@ -104,9 +81,4 @@ async def update_title(id: str, title_input: TitleInput):
     
     title = title_input.message_content
     return {"title": title}
-
-
-@chat_router.get("/{id}", tags=["chat"])
-async def get_chat(id: str):
-  return {"message": "Hey, It is me Goku"}
 
