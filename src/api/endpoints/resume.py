@@ -4,7 +4,7 @@ import os
 
 resume_router = APIRouter()
 
-@resume_router.get("/", 
+@resume_router.get("", 
     responses={
         200: {"description": "Resume downloaded successfully", "content": {"application/pdf": {}}},
         404: {"description": "Resume file not found"},

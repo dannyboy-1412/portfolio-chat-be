@@ -15,7 +15,6 @@ chat_router = APIRouter()
 @chat_router.post("/conversations/danny/completions", tags=["chat"])
 async def get_personal_completions(message: Message, db: Annotated[Database, Depends(get_db)]):
     try:
-        message.id = str(uuid.uuid4())
         await insert_personal_message(message, db)
         messages = reconstruct_conversation(message, db)
         stream = generate_completion(messages)
