@@ -17,7 +17,7 @@ chat_router = APIRouter()
 
 @chat_router.post("/conversations/danny/completions", tags=["chat"])
 @limiter.limit("100/minute")
-async def get_personal_completions(message: Message, db: Annotated[Database, Depends(get_db)]):
+async def get_personal_completions(request: Request, message: Message, db: Annotated[Database, Depends(get_db)]):
     try:
         await insert_personal_message(message, db)
 
