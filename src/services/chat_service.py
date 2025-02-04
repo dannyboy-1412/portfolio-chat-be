@@ -52,7 +52,6 @@ def reconstruct_conversation(message: Message, db: Database) -> List[OpenAIMessa
         conversation = [OpenAIMessage(role=message.role, content=message.content)]
         
         if not message.parent_id:
-            print("No parent id")
             return conversation
         
         current_parent = message.parent_id
@@ -70,12 +69,3 @@ def reconstruct_conversation(message: Message, db: Database) -> List[OpenAIMessa
     except Exception as e:
         print(f"Error reconstructing conversation: {e}")
         raise e
-'''
-TO DO:
-- Add a function to update the conversation title
-- Add a function to delete a conversation
-- Add a function to get a conversation by id
-- Add a function to get all conversations
-- Integrate with OpenAI API
-- Add the OpenAI functionality for the completions api
-'''

@@ -5,7 +5,9 @@ from typing import List
 
 from src.models.openai_response import TitleResponse
 from src.models.chat_models import OpenAIMessage
-from src.services.constant_prompt import system_prompt_personal_chat
+# from src.services.constant_prompt import system_prompt_personal_chat
+# from src.services.test_prompt import system_prompt
+from src.services.system_prompt import system_prompt
 
 load_dotenv()
 
@@ -37,7 +39,7 @@ def generate_completion(conversation: List[OpenAIMessage]) -> str:
         messages=[
             {
                 "role": "system",
-                "content": system_prompt_personal_chat
+                "content": system_prompt
             },
             *(msg.model_dump() for msg in conversation)
         ],

@@ -21,15 +21,15 @@ async def get_personal_completions(message: Message, db: Annotated[Database, Dep
         assistant_message_id = str(uuid.uuid4())
         async def response_generator():
             full_response = ""
-            yield f"event: metadata\ndata: {json.dumps({'assistant_message_id': assistant_message_id})}\n\n"
+            yield f"metadata/&\ndata: {json.dumps({'assistant_message_id': assistant_message_id})}/&\n\n"
 
             for chunk in stream:
                 if chunk.choices[0].delta.content is not None:
                     content = chunk.choices[0].delta.content
                     full_response += content
-                    yield f"event: message\ndata: {json.dumps({'content': content})}\n\n"
+                    yield f"message/&\ndata: {json.dumps({'content': content})}/&\n\n"
 
-            yield "event: [DONE]\n\n"
+            yield "[DONE]/&\n\n"
             
             assistant_message = Message(
                 id=assistant_message_id,
