@@ -1,7 +1,8 @@
 from fastapi import APIRouter, HTTPException
 from fastapi.responses import FileResponse
-import os
+import os, logging
 
+logger = logging.getLogger(__name__)
 resume_router = APIRouter()
 
 @resume_router.get("", 
@@ -19,14 +20,13 @@ async def get_resume():
         raise HTTPException(status_code=404, detail="Resume file not found")
         
     try:
+        logger.info(f"Serving resume file: {FILE_PATH}")
         return FileResponse(
             FILE_PATH,
             media_type="application/pdf",
             filename="daniel_resume.pdf"
         )
-    except IOError as e:
-        print(e)
-        raise HTTPException(status_code=500, detail="Failed to read resume file")
+
     except Exception as e:
-        print(e)
-        raise HTTPException(status_code=500, detail="Failed to download resume")
+        logger.error(f"Error serving resume file: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to serve resume file")

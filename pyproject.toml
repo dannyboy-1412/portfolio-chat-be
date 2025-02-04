@@ -6,13 +6,16 @@ authors = [
     {name = "dannyboy-1412",email = "danielantorodri@gmail.com"}
 ]
 readme = "README.md"
-requires-python = ">=3.13"
+requires-python = ">=3.9,<4.0"
 dependencies = [
     "fastapi (>=0.115.6,<0.116.0)",
     "uvicorn (>=0.34.0,<0.35.0)",
     "pymongo[srv] (>=4.10.1,<5.0.0)",
     "python-dotenv (>=1.0.1,<2.0.0)",
     "openai (>=1.60.0,<2.0.0)",
+    "python-telegram-bot (>=21.10,<22.0)",
+    "slowapi (>=0.1.9,<0.2.0)",
+    "apscheduler (>=3.11.0,<4.0.0)",
 ]
 
 

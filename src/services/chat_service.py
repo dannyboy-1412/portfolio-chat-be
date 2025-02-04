@@ -1,9 +1,11 @@
-from src.models.chat_models import Conversation
-from src.db.base import get_db, Database
 from fastapi import Depends 
 from typing import Annotated, List
+from datetime import datetime, timedelta
 
+from src.db.base import get_db, Database, get_collection
+from src.models.chat_models import Conversation
 from src.models.chat_models import Message, OpenAIMessage
+from src.services.telegram_bot import send_message
 
 async def create_conversation(conversation: Conversation, db: Annotated[Database, Depends(get_db)]):
     """Creates a new conversation in the database.
@@ -42,6 +44,7 @@ def get_all_personal_messages(db: Database):
 async def insert_personal_message(message: Message, db: Database):
     try:
         collection = db["danny_messages"]
+        message.ttl = datetime.now() + timedelta(minutes=30)
         collection.insert_one(message.model_dump())
     except Exception as e:
         print(e)
@@ -69,3 +72,15 @@ def reconstruct_conversation(message: Message, db: Database) -> List[OpenAIMessa
     except Exception as e:
         print(f"Error reconstructing conversation: {e}")
         raise e
+    
+async def delete_messages():
+    try:
+        collection = get_collection("danny_messages")
+        result = collection.delete_many({"ttl": {"$lt": datetime.now()}})
+        await send_message(f"Deleted {result.deleted_count} message(s) from collection")
+    except Exception as e:
+        print(f"Error deleting all personal messages: {e}")
+        raise e
+
+
+

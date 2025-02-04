@@ -20,6 +20,10 @@ class Conversation(BaseModel):
     model: str = Field(default="gpt-4o-mini")
     title: str = Field(default="")
 
+class TelegramInputMessage(BaseModel):
+    user_message: str
+    assistant_message: Optional[str] = Field(default=None)
 
 class TitleInput(BaseModel):
+
     message_content: str
