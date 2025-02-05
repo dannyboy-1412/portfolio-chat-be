@@ -49,10 +49,13 @@ app.add_middleware(
     allow_origins=[
       "http://localhost:3000",
       "https://portfolio-chat-fe-seven.vercel.app/",
-      "https://portfolio-chat-fe-seven.vercel.app"
+      "https://portfolio-chat-fe-seven.vercel.app",
+      "https://www.codestuffwdanny.com/",
+      "https://www.codestuffwdanny.com"
     ],
     allow_credentials=True,
     allow_methods=["*"],
+
     allow_headers=["*"],
 )
 
