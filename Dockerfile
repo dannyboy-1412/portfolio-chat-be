@@ -15,7 +15,6 @@ RUN poetry install --no-interaction --no-root
 
 # Copy the source code
 COPY src ./src
-COPY requirements.txt ./
 
 # Set environment variables for FastAPI and Mangum
 ENV PORT=8080
