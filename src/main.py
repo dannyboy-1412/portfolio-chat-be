@@ -5,6 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
+from mangum import Mangum
 
 from src.api.limiter import limiter
 from src.api.endpoints.chat import chat_router
@@ -17,7 +18,6 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
     handlers=[
-        logging.FileHandler('app.log'),
         logging.StreamHandler()
     ]
 )
@@ -31,9 +31,9 @@ async def delete_all_messages():
 
 
 app = FastAPI()
-scheduler = AsyncIOScheduler()
-scheduler.add_job(delete_all_messages, 'interval', hours=2)
-scheduler.start()
+# scheduler = AsyncIOScheduler()
+# scheduler.add_job(delete_all_messages, 'interval', hours=2)
+# scheduler.start()
 
 
 app.state.limiter = limiter
@@ -46,7 +46,11 @@ api_v1_router.include_router(resume_router, prefix="/resume")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=[
+      "http://localhost:3000",
+      "https://portfolio-chat-fe-seven.vercel.app/",
+      "https://portfolio-chat-fe-seven.vercel.app"
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -57,3 +61,5 @@ async def main_route():
   return {"message": "Hey, It is me Goku"}
 
 app.include_router(api_v1_router)
+
+handler = Mangum(app)
